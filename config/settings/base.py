@@ -47,14 +47,14 @@ LOCALE_PATHS = [str(ROOT_DIR / "locale")]
 # DATABASES["default"]["ATOMIC_REQUESTS"] = True
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'db.sqlite3',
-        'USER': 'admin',
-        'PASSWORD': 'admin',
-        'HOST': '',
-        'PORT': '',
-        'ATOMIC_REQUESTS': True,
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": "db.sqlite3",
+        "USER": "admin",
+        "PASSWORD": "admin",
+        "HOST": "",
+        "PORT": "",
+        "ATOMIC_REQUESTS": True,
     }
 }
 
@@ -90,6 +90,8 @@ THIRD_PARTY_APPS = [
 
 LOCAL_APPS = [
     "books_api.users.apps.UsersConfig",
+    "books_api.googlebooks.apps.GooglebooksConfig",
+    "books_api.amazonbooks.apps.AmazonbooksConfig",
     # Your stuff: custom apps go here
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -298,3 +300,16 @@ CORS_URLS_REGEX = r"^/api/.*$"
 # ------------------------------------------------------------------------------
 
 GOOGLE_BOOKS_API = "https://www.googleapis.com/books/v1/volumes"
+AMAZON_BOOKS_API = "https://www.amazon.com"
+HEADERS_MAC = {
+    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.121 Safari/537.36",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    "Accept-Charset": "ISO-8859-1,utf-8;q=0.7,*;q=0.3",
+    "Accept-Encoding": "none",
+    "Accept-Language": "en-US,en;q=0.8",
+    "Connection": "keep-alive",
+}
+PROXIES_MAC = {
+    "http": "http://10.10.1.10:3128",
+    "https": "http://10.10.1.10:1080",
+}
