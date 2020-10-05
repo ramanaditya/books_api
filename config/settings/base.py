@@ -41,10 +41,22 @@ LOCALE_PATHS = [str(ROOT_DIR / "locale")]
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
 
+# DATABASES = {
+#     "default": env.db("DATABASE_URL" , default = "postgres:///books_api")
+# }
+# DATABASES["default"]["ATOMIC_REQUESTS"] = True
+
 DATABASES = {
-    "default": env.db("DATABASE_URL", default="postgres:///books_api")
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'db.sqlite3',
+        'USER': 'admin',
+        'PASSWORD': 'admin',
+        'HOST': '',
+        'PORT': '',
+        'ATOMIC_REQUESTS': True,
+    }
 }
-DATABASES["default"]["ATOMIC_REQUESTS"] = True
 
 # URLS
 # ------------------------------------------------------------------------------
@@ -255,7 +267,6 @@ LOGGING = {
     "root": {"level": "INFO", "handlers": ["console"]},
 }
 
-
 # django-allauth
 # ------------------------------------------------------------------------------
 ACCOUNT_ALLOW_REGISTRATION = env.bool("DJANGO_ACCOUNT_ALLOW_REGISTRATION", True)
@@ -285,3 +296,5 @@ REST_FRAMEWORK = {
 CORS_URLS_REGEX = r"^/api/.*$"
 # Your stuff...
 # ------------------------------------------------------------------------------
+
+GOOGLE_BOOKS_API = "https://www.googleapis.com/books/v1/volumes"
