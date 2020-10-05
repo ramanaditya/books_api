@@ -1,0 +1,47 @@
+version: 2.1
+
+jobs:
+  build-job:
+    docker:
+      - image: circleci/python:3.8
+      - image: circleci/postgres:10.5
+    environment:
+      DJANGO_READ_DOT_ENV_FILE: True
+      DJANGO_SETTINGS_MODULE: config.settings.local
+    working_directory: ~/books_api
+    steps:
+      - checkout
+      - restore_cache:
+          key: v001-app-{{ .Branch }}-{{ checksum "requirements/local.txt" }}
+      - run:
+          name: Install Python dependencies
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install -r requirements/local.txt
+      - save_cache:
+          key: v001-app-{{ .Branch }}-{{ checksum "requirements/local.txt" }}
+          paths:
+            - 'venv'
+      - run:
+          name: Add python project to path
+          command: 'echo "$(realpath .)/app" > venv/lib/python3.8.5/site-packages/app.pth'
+      - run:
+          name: Activate Virtual Environment
+          command: |
+            . venv/bin/activate
+      - run:
+          name: Run tests
+          command: |
+            pytest
+
+workflows:
+  version: 2
+  build-deploy:
+    jobs:
+      - build-job:
+          filters:
+            branches:
+              only:
+                - develop
+                - master
