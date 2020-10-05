@@ -4,7 +4,6 @@ jobs:
   build-job:
     docker:
       - image: circleci/python:3.8
-      - image: circleci/postgres:10.5
     environment:
       DJANGO_READ_DOT_ENV_FILE: True
       DJANGO_SETTINGS_MODULE: config.settings.local
@@ -18,6 +17,7 @@ jobs:
           command: |
             python3 -m venv venv
             . venv/bin/activate
+            python3 -m pip install --upgrade pip
             pip install -r requirements/local.txt
       - save_cache:
           key: v001-app-{{ .Branch }}-{{ checksum "requirements/local.txt" }}
@@ -25,7 +25,7 @@ jobs:
             - 'venv'
       - run:
           name: Add python project to path
-          command: 'echo "$(realpath .)/app" > venv/lib/python3.8.5/site-packages/app.pth'
+          command: 'echo "$(realpath .)/app" > venv/lib/python3.8/site-packages/app.pth'
       - run:
           name: Activate Virtual Environment
           command: |
