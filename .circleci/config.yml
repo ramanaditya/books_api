@@ -33,7 +33,6 @@ jobs:
       - run:
           name: Run tests
           command: |
-            pwd
             . venv/bin/activate
             python3 -m pytest
 
