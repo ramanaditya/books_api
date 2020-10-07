@@ -95,28 +95,31 @@ Response
 ----------
 
 ``/amazonbooks``
+-----------------
 
-.. code-block::json
+.. code-block:: json
 
-    status_code = 200 OK
-    message:
-    [
-        {
-            "title": "The Alchemist, 25th Anniversary: A Fable About Following Your Dream",
-            "url": "/Alchemist-Paulo-Coelho/dp/0062315005/ref=sr_1_1?dchild=1&keywords=The+Alchemist&qid=1602088322&sr=8-1",
-            "ISBN_10": "0062315005",
-            "ISBN_13": "978-0062315007"
-        },
-        ...
-    ]
+    {
+        "status_code": 200,
+        "body":
+        [
+            {
+                "title": "The Alchemist, 25th Anniversary: A Fable About Following Your Dream",
+                "url": "/Alchemist-Paulo-Coelho/dp/0062315005/ref=sr_1_1?dchild=1&keywords=The+Alchemist&qid=1602088322&sr=8-1",
+                "ISBN_10": "0062315005",
+                "ISBN_13": "978-0062315007"
+            },
+        ]
+    }
 
 
-``googlebooks``
+``/googlebooks``
+------------------
 
-.. code-block::json
+.. code-block:: json
 
-    status_code = 200 OK
-    message:
+    "status_code": 200,
+    "body":
     [
         {
             "title": "The Alchemist",
@@ -129,3 +132,17 @@ Response
 
 Invoking API endpoints
 ^^^^^^^^^^^^^^^^^^^^^^^
+
+``curl``
+----------
+
+.. code-block:: bash
+
+    curl -X GET http://127.0.0.1:8000/api/googlebooks/?q=The%20Alchemist -H 'Authorization: Token <Token>'
+
+``http``
+---------
+
+.. code-block:: bash
+
+    http GET http://127.0.0.1:8000/api/googlebooks/?q=The%20Alchemist 'Authorization: Token <Token>'
