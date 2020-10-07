@@ -118,16 +118,17 @@ Response
 
 .. code-block:: json
 
-    "status_code": 200,
-    "body":
-    [
-        {
-            "title": "The Alchemist",
-            "ISBN_13": "9780062416216",
-            "ISBN_10": "0062416219"
-        },
-        ...
-    ]
+    {
+        "status_code": 200,
+        "body":
+        [
+            {
+                "title": "The Alchemist",
+                "ISBN_13": "9780062416216",
+                "ISBN_10": "0062416219"
+            },
+        ]
+    }
 
 
 Invoking API endpoints
