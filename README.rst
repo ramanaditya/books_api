@@ -77,6 +77,8 @@ The following details how to deploy this application.
 API Endpoints
 ^^^^^^^^^^^^^^
 
+Requests
+---------
 +-------------------+-----------+-------------------------------+-----------+
 | endpoint          | methods   | parameters                    | Required  |
 +===================+===========+===============================+===========+
@@ -89,4 +91,41 @@ API Endpoints
 | ``/googlebooks``  | ``GET``   | q=<Book Title>                | True      |
 +-------------------+-----------+-------------------------------+-----------+
 
+Response
+----------
 
+``/amazonbooks``
+
+.. code-block::json
+
+    status_code = 200 OK
+    message:
+    [
+        {
+            "title": "The Alchemist, 25th Anniversary: A Fable About Following Your Dream",
+            "url": "/Alchemist-Paulo-Coelho/dp/0062315005/ref=sr_1_1?dchild=1&keywords=The+Alchemist&qid=1602088322&sr=8-1",
+            "ISBN_10": "0062315005",
+            "ISBN_13": "978-0062315007"
+        },
+        ...
+    ]
+
+
+``googlebooks``
+
+.. code-block::json
+
+    status_code = 200 OK
+    message:
+    [
+        {
+            "title": "The Alchemist",
+            "ISBN_13": "9780062416216",
+            "ISBN_10": "0062416219"
+        },
+        ...
+    ]
+
+
+Invoking API endpoints
+^^^^^^^^^^^^^^^^^^^^^^^
