@@ -7,7 +7,7 @@ jobs:
     environment:
       DJANGO_READ_DOT_ENV_FILE: True
       DJANGO_SETTINGS_MODULE: config.settings.local
-    working_directory: ~/books_api
+    working_directory: ~/bookapi
     steps:
       - checkout
       - restore_cache:
