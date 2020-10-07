@@ -325,3 +325,4 @@ books_api/media/
 .pytest_cache/
 
 
+db.sqlite3
