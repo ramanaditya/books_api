@@ -1,8 +1,8 @@
 from django.conf import settings
 from rest_framework.routers import DefaultRouter, SimpleRouter
 
-from books_api.amazonbooks.api.views import AmazonBooksViewSet
-from books_api.googlebooks.api.views import GoogleBooksViewSet
+from books_api.products.amazonbooks.api.views import AmazonBooksViewSet
+from books_api.products.googlebooks.api.views import GoogleBooksViewSet
 from books_api.users.api.views import UserViewSet
 
 if settings.DEBUG:

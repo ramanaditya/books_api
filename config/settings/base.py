@@ -90,8 +90,8 @@ THIRD_PARTY_APPS = [
 
 LOCAL_APPS = [
     "books_api.users.apps.UsersConfig",
-    "books_api.googlebooks.apps.GooglebooksConfig",
-    "books_api.amazonbooks.apps.AmazonbooksConfig",
+    "books_api.products.googlebooks.apps.GooglebooksConfig",
+    "books_api.products.amazonbooks.apps.AmazonbooksConfig",
     # Your stuff: custom apps go here
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps

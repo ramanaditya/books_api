@@ -80,8 +80,6 @@ class ProductDetails:
             data.append(temp)
         except:
             pass
-        print(data)
-
         return data
 
 
@@ -95,7 +93,7 @@ class AmazonBooksViewSet(viewsets.ViewSet):
         """
         query_string = request.query_params.get("q", default="")
         no_pages = int(request.query_params.get("pages", default=1))
-        size = int(request.query_params.get("size", default=5))
+        size = int(request.query_params.get("count", default=5))
         url = f"{settings.AMAZON_BOOKS_API}/s?k={query_string}"  # f"{settings.AMAZON_BOOKS_API}?k={query_string}&i=stripbooks-intl-ship&ref=nb_sb_noss_2"
         result = list()
         product_details = ProductDetails(query_string)
@@ -105,14 +103,14 @@ class AmazonBooksViewSet(viewsets.ViewSet):
             if len(result) > size:
                 result = result[:size]
                 break
-
+        identifiers = []
         for ind in range(min(len(result), size)):
             if result[ind]["url"]:
                 soup = product_details.fetch_data(
                     f"{settings.AMAZON_BOOKS_API}{result[ind]['url']}"
                 )
-                result[ind]["identifiers"] = product_details.get_isbn(soup)
-            else:
-                result[ind]["identifiers"] = {}
+                identifiers = product_details.get_isbn(soup)
+            for identifier in identifiers:
+                result[ind][identifier["type"]] = identifier["identifier"]
 
         return Response(result)

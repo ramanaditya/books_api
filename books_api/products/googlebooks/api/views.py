@@ -31,6 +31,9 @@ class GoogleBooksViewSet(viewsets.ViewSet):
                         # title contains the title of the book
                         # identifiers contains the isbn details
                         data["title"] = vol_info.get("title", None)
-                        data["identifiers"] = vol_info.get("industryIdentifiers", None)
+                        identifiers = vol_info.get("industryIdentifiers", None)
+                        if identifiers:
+                            for identifier in identifiers:
+                                data[identifier["type"]] = identifier["identifier"]
                     ret.append(data)
         return Response(ret)

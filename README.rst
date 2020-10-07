@@ -35,15 +35,6 @@ Setting Up Your Users
 
 For convenience, you can keep your normal user logged in on Chrome and your superuser logged in on Firefox (or similar), so that you can see how the site behaves for both kinds of users.
 
-Type checks
-^^^^^^^^^^^
-
-Running type checks with mypy:
-
-::
-
-  $ mypy books_api
-
 Test coverage
 ^^^^^^^^^^^^^
 
@@ -58,7 +49,7 @@ Running tests with py.test
 
 ::
 
-  $ pytest
+  $ python3 -m pytest
 
 Live reloading and Sass CSS compilation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -66,9 +57,6 @@ Live reloading and Sass CSS compilation
 Moved to `Live reloading and SASS compilation`_.
 
 .. _`Live reloading and SASS compilation`: http://cookiecutter-django.readthedocs.io/en/latest/live-reloading-and-sass-compilation.html
-
-
-
 
 
 Sentry
@@ -86,5 +74,19 @@ Deployment
 The following details how to deploy this application.
 
 
+API Endpoints
+^^^^^^^^^^^^^^
+
++-------------------+-----------+-------------------------------+
+| endpoint          | methods   | parameters                    |
++===================+===========+===============================+
+| `/amazonbooks`    | `GET`     | q=<Book Title>                |
+|                   |           +-------------------------------+
+|                   |           | pages=<No of pages to scrap>  |
+|                   |           +-------------------------------+
+|                   |           | count=<Count of result>       |
++-------------------+-----------+-------------------------------+
+| `/googlebooks`    | `GET`     | q=<Book Title>                |
++-------------------+-----------+-------------------------------+
 
 
