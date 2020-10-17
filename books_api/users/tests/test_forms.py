@@ -36,5 +36,5 @@ class TestUserCreationForm:
         )
 
         assert not form.is_valid()
-        assert len(form.errors) == 1
+        assert len(form.errors) == 2
         assert "username" in form.errors
