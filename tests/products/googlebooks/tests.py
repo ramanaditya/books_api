@@ -20,18 +20,19 @@ class GoogleBooksAPITest(APITestCase):
 
     def test_googlebooks_api(self):
         with vcr.use_cassette(
-            "data/products/googlebooks/test-googlebooks.yaml",
-            serializer="yaml",
+            "data/products/googlebooks/test-googlebooks.json",
+            serializer="json",
             record_mode="once",
             filter_query_parameters=["q"],
             match_on=("body",),
+            decode_compressed_response=True,
         ):
             factory = APIRequestFactory()
             view = GoogleBooksViewSet.as_view({"get": "list"})
             request = factory.get(
                 "/googlebooks/?format=json&q=None",
                 HTTP_AUTHORIZATION=f"Token {self.token}",
-                format="yaml",
+                format="json",
             )
             response = view(request)
             self.assertEqual(
