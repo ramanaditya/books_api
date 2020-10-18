@@ -20,5 +20,6 @@ django-cors-headers==3.5.0 # https://github.com/adamchainz/django-cors-headers
 # Scrap
 # ------------------------------------------------------------------------------
 BeautifulSoup4==4.9.3
+lxml==4.5.2
 
 vcrpy==4.1.0
