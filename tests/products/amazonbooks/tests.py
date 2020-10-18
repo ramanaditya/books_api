@@ -9,6 +9,7 @@ from books_api.products.googlebooks.api.views import GoogleBooksViewSet
 from books_api.users.models import User
 
 
+@vcr.use_cassette()
 class AmazonBooksAPITest(APITestCase):
     def setUp(self):
         self.factory = APIRequestFactory()
@@ -20,9 +21,12 @@ class AmazonBooksAPITest(APITestCase):
 
     def test_amazonbooks_api(self):
         with vcr.use_cassette(
-            "books_api/products/amazonbooks/test-amazonbooksapi.yml",
+            "data/products/amazonbooks/test-amazonbooks.yaml",
+            serializer="yaml",
+            record_mode="once",
             filter_query_parameters=["q"],
-        ) as cass:
+            match_on=("body",),
+        ):
             factory = APIRequestFactory()
             view = GoogleBooksViewSet.as_view({"get": "list"})
             request = factory.get(
@@ -34,6 +38,3 @@ class AmazonBooksAPITest(APITestCase):
             self.assertEqual(
                 response.status_code, 200, "Response error: {}".format(response.data)
             )
-            assert cass.all_played
-            cass.rewind()
-            assert not cass.all_played
