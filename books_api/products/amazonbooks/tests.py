@@ -1,3 +1,5 @@
+import json
+
 import vcr
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APIRequestFactory
@@ -16,19 +18,22 @@ class AmazonBooksAPITest(APITestCase):
         self.token = Token.objects.create(user=self.user)
         self.token.save()
 
-    @vcr.use_cassette(
-        "books_api/products/amazonbooks/test-amazonbooksapi.yml",
-        filter_query_parameters=["q"],
-    )
-    def test_googlebooks_api(self):
-        factory = APIRequestFactory()
-        view = GoogleBooksViewSet.as_view({"get": "list"})
-        request = factory.get(
-            "/amazonbooks/?format=json&q=None",
-            HTTP_AUTHORIZATION=f"Token {self.token}",
-            format="json",
-        )
-        response = view(request)
-        self.assertEqual(
-            response.status_code, 200, "Response error: {}".format(response.data)
-        )
+    def test_amazonbooks_api(self):
+        with vcr.use_cassette(
+            "books_api/products/amazonbooks/test-amazonbooksapi.yml",
+            filter_query_parameters=["q"],
+        ) as cass:
+            factory = APIRequestFactory()
+            view = GoogleBooksViewSet.as_view({"get": "list"})
+            request = factory.get(
+                "/amazonbooks/?format=json&q=None",
+                HTTP_AUTHORIZATION=f"Token {self.token}",
+                format="json",
+            )
+            response = view(request)
+            self.assertEqual(
+                response.status_code, 200, "Response error: {}".format(response.data)
+            )
+            assert cass.all_played
+            cass.rewind()
+            assert not cass.all_played
