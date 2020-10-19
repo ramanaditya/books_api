@@ -19,19 +19,30 @@ def save_json_data(file_name):
     data = dict()
     product_details = ProductDetails()
     result = list()
+    size = 5
     with open(file_name, "r") as f:
         data = json.load(f)
     if data.get("interactions", None):
         if len(data["interactions"]) >= 1:
-            html = data["interactions"][0]["response"]["body"]["string"]
+            html = (
+                data["interactions"][0]["response"]["body"]["string"]
+                .replace("\\n", "")
+                .replace('"', "'")
+            )
             soup = BeautifulSoup(html, features="lxml")
             result.extend(product_details.get_data_list(soup))
+            if len(result) > size:
+                result = result[:size]
         for ind in range(1, len(data["interactions"])):
-            html = data["interactions"][ind]["response"]["body"]["string"]
+            html = (
+                data["interactions"][ind]["response"]["body"]["string"]
+                .replace("\\n", "")
+                .replace('"', "'")
+            )
             soup = BeautifulSoup(html, features="lxml")
             identifiers = product_details.get_isbn(soup)
             for identifier in identifiers:
-                result[ind][identifier["type"]] = identifier["identifier"]
+                result[ind - 1][identifier["type"]] = identifier["identifier"]
     dir_list = file_name.split("/")
     out_file_name = f'data/{"/".join(dir_list[1:])}'
     with open(out_file_name, "w") as outfile:
@@ -94,4 +105,4 @@ class AmazonBooksAPITest(APITestCase):
         )
         response = self.view(request)
         response.render()
-        assert response.data[0] == vcr_output[0]
+        assert response.data == vcr_output
