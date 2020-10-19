@@ -6,7 +6,7 @@ from rest_framework.response import Response
 
 
 class ProductDetails:
-    def __init__(self, query_string):
+    def __init__(self, query_string=None):
         self.headers = settings.HEADERS_MAC
         self.proxies = settings.PROXIES_MAC
         self.query_string = query_string
@@ -96,7 +96,7 @@ class AmazonBooksViewSet(viewsets.ViewSet):
         size = int(request.query_params.get("count", default=5))
         url = f"{settings.AMAZON_BOOKS_API}/s?k={query_string}"  # f"{settings.AMAZON_BOOKS_API}?k={query_string}&i=stripbooks-intl-ship&ref=nb_sb_noss_2"
         result = list()
-        product_details = ProductDetails(query_string)
+        product_details = ProductDetails(query_string=query_string)
         for page in range(no_pages):
             soup = product_details.fetch_data(url, page)
             result.extend(product_details.get_data_list(soup))
@@ -112,5 +112,4 @@ class AmazonBooksViewSet(viewsets.ViewSet):
                 identifiers = product_details.get_isbn(soup)
             for identifier in identifiers:
                 result[ind][identifier["type"]] = identifier["identifier"]
-
         return Response(result)
