@@ -17,8 +17,8 @@ def reformat_response_body():
         items = json.loads(response["body"]["string"])
         data = list()
         if items:
-            data = getCustomizedList(items["items"])
-        response["body"]["string"] = data
+            data = getCustomizedList(items)
+        response["body"]["output"] = data
         return response
 
     return before_record_response
@@ -51,6 +51,7 @@ class GoogleBooksAPITest(APITestCase):
                 format="json",
             )
             response = self.view(request)
+            response.render()
             self.assertEqual(
                 response.status_code, 200, "Response error: {}".format(response.data),
             )
