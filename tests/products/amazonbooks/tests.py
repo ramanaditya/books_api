@@ -47,14 +47,14 @@ class AmazonBooksAPITest(APITestCase):
         self.token.save()
         self.factory = APIRequestFactory()
         self.view = AmazonBooksViewSet.as_view({"get": "list"})
+        self.query_string = "The Alchemist"
+        self.file_name = (
+            f"vcr_py/products/amazonbooks/{''.join(self.query_string.split(' '))}.json"
+        )
 
     def test_amazonbooks_api(self):
-        query_string = "The Alchemist"
-        file_name = (
-            f"vcr_py/products/amazonbooks/{''.join(query_string.split(' '))}.json"
-        )
         with vcr.use_cassette(
-            f"{file_name}",
+            f"{self.file_name}",
             serializer="json",
             record_mode="once",
             filter_query_parameters=["q"],
@@ -63,19 +63,35 @@ class AmazonBooksAPITest(APITestCase):
         ):
 
             request = self.factory.get(
-                f"/amazonbooks/?format=json&q={query_string}",
+                f"/amazonbooks/?format=json&q={self.query_string}",
                 HTTP_AUTHORIZATION=f"Token {self.token}",
                 format="json",
             )
-            response = self.view(request).render()
+            response = self.view(request)
             self.assertEqual(
                 response.status_code, 200, "Response error: {}".format(response)
             )
         max_check = 10
         for i in range(max_check):
             try:
-                with open(file_name, "rb") as _:
+                with open(self.file_name, "rb") as _:
                     break
             except IOError:
                 time.sleep(3)
-        save_json_data(file_name)
+        save_json_data(self.file_name)
+
+    def test_vcr_and_viewsets_amazonbooks(self):
+        vcr_output = list()
+        dirs_list = self.file_name.split("/")
+        data_file_name = f"data/{'/'.join(dirs_list[1:])}"
+        with open(data_file_name, "r") as infile:
+            vcr_output = json.load(infile)
+        infile.close()
+        request = self.factory.get(
+            f"/amazonbooks/?format=json&q={self.query_string}",
+            HTTP_AUTHORIZATION=f"Token {self.token}",
+            format="json",
+        )
+        response = self.view(request)
+        response.render()
+        assert response.data[:2] == vcr_output[:2]
