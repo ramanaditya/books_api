@@ -5,8 +5,23 @@ from rest_framework.authtoken.models import Token
 from rest_framework.test import APIRequestFactory
 from rest_framework.test import APITestCase
 
-from books_api.products.googlebooks.api.views import GoogleBooksViewSet
+from books_api.products.googlebooks.api.views import (
+    GoogleBooksViewSet,
+    getCustomizedList,
+)
 from books_api.users.models import User
+
+
+def reformat_response_body():
+    def before_record_response(response):
+        items = json.loads(response["body"]["string"])
+        data = list()
+        if items:
+            data = getCustomizedList(items)
+        response["body"]["output"] = data
+        return response
+
+    return before_record_response
 
 
 class GoogleBooksAPITest(APITestCase):
@@ -17,6 +32,8 @@ class GoogleBooksAPITest(APITestCase):
         )
         self.token = Token.objects.create(user=self.user)
         self.token.save()
+        self.factory = APIRequestFactory()
+        self.view = GoogleBooksViewSet.as_view({"get": "list"})
 
     def test_googlebooks_api(self):
         with vcr.use_cassette(
@@ -26,15 +43,15 @@ class GoogleBooksAPITest(APITestCase):
             filter_query_parameters=["q"],
             match_on=("body",),
             decode_compressed_response=True,
+            before_record_response=reformat_response_body(),
         ):
-            factory = APIRequestFactory()
-            view = GoogleBooksViewSet.as_view({"get": "list"})
-            request = factory.get(
+            request = self.factory.get(
                 "/googlebooks/?format=json&q=None",
                 HTTP_AUTHORIZATION=f"Token {self.token}",
                 format="json",
             )
-            response = view(request)
+            response = self.view(request)
+            response.render()
             self.assertEqual(
-                response.status_code, 200, "Response error: {}".format(response.data)
+                response.status_code, 200, "Response error: {}".format(response.data),
             )
