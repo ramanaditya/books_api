@@ -15,7 +15,15 @@ from books_api.products.amazonbooks.api.views import (
 from books_api.users.models import User
 
 
-def save_json_data(file_name):
+def write_json_data(file_name, result):
+    dir_list = file_name.split("/")
+    out_file_name = f'data/{"/".join(dir_list[1:])}'
+    with open(out_file_name, "w") as outfile:
+        json.dump(result, outfile, ensure_ascii=False, indent=4)
+    outfile.close()
+
+
+def get_json_data(file_name):
     data = dict()
     product_details = ProductDetails()
     result = list()
@@ -43,10 +51,7 @@ def save_json_data(file_name):
             identifiers = product_details.get_isbn(soup)
             for identifier in identifiers:
                 result[ind - 1][identifier["type"]] = identifier["identifier"]
-    dir_list = file_name.split("/")
-    out_file_name = f'data/{"/".join(dir_list[1:])}'
-    with open(out_file_name, "w") as outfile:
-        json.dump(result, outfile, ensure_ascii=False, indent=4)
+    return result
 
 
 class AmazonBooksAPITest(APITestCase):
@@ -89,20 +94,15 @@ class AmazonBooksAPITest(APITestCase):
                     break
             except IOError:
                 time.sleep(3)
-        save_json_data(self.file_name)
+        result = get_json_data(self.file_name)
+        write_json_data(self.file_name, result)
 
     def test_vcr_and_viewsets_amazonbooks(self):
-        vcr_output = list()
+        saved_data = list()
         dirs_list = self.file_name.split("/")
         data_file_name = f"data/{'/'.join(dirs_list[1:])}"
         with open(data_file_name, "r") as infile:
-            vcr_output = json.load(infile)
+            saved_data = json.load(infile)
         infile.close()
-        request = self.factory.get(
-            f"/amazonbooks/?format=json&q={self.query_string}",
-            HTTP_AUTHORIZATION=f"Token {self.token}",
-            format="json",
-        )
-        response = self.view(request)
-        response.render()
-        assert response.data[0] == vcr_output[0]
+        vcr_output = get_json_data(self.file_name)
+        assert saved_data == vcr_output

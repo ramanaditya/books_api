@@ -14,7 +14,15 @@ from books_api.products.googlebooks.api.views import (
 from books_api.users.models import User
 
 
-def save_googlebooks_output(file_name):
+def write_data_to_json(file_name, result):
+    dir_list = file_name.split("/")
+    out_file_name = f'data/{"/".join(dir_list[1:])}'
+    with open(out_file_name, "w") as outfile:
+        json.dump(result, outfile, ensure_ascii=False, indent=4)
+    outfile.close()
+
+
+def get_googlebooks_output(file_name):
     data = dict()
     result = list()
     with open(file_name, "r") as f:
@@ -23,12 +31,7 @@ def save_googlebooks_output(file_name):
     items = json.loads(result["interactions"][0]["response"]["body"]["string"])
     if items:
         data = getCustomizedList(items)
-
-        dir_list = file_name.split("/")
-        out_file_name = f'data/{"/".join(dir_list[1:])}'
-        with open(out_file_name, "w") as outfile:
-            json.dump(data, outfile, ensure_ascii=False, indent=4)
-        outfile.close()
+    return data
 
 
 class GoogleBooksAPITest(APITestCase):
@@ -73,21 +76,15 @@ class GoogleBooksAPITest(APITestCase):
                     break
             except IOError:
                 time.sleep(3)
-        save_googlebooks_output(self.file_name)
+        result = get_googlebooks_output(self.file_name)
+        write_data_to_json(self.file_name, result)
 
     def test_vcr_and_viewsets_googlebooks(self):
-        vcr_output = list()
+        saved_data = list()
         dirs_list = self.file_name.split("/")
         data_file_name = f"data/{'/'.join(dirs_list[1:])}"
         with open(data_file_name, "r") as infile:
-            vcr_output = json.load(infile)
+            saved_data = json.load(infile)
         infile.close()
-        request = self.factory.get(
-            f"/googlebooks/?format=json&q={self.query_string}",
-            HTTP_AUTHORIZATION=f"Token {self.token}",
-            format="json",
-        )
-        response = self.view(request)
-        response.render()
-        response_data = response.data
-        assert response_data[0] == vcr_output[0]
+        vcr_output = get_googlebooks_output(self.file_name)
+        assert saved_data == vcr_output
