@@ -38,7 +38,7 @@ class ProductDetails:
 
             prod_detail = dict()
             prod_detail["title"] = title.text if title else "unknown-product"
-            prod_detail["url"] = url if url else None
+            prod_detail["url"] = url.split("?")[0] if url else None
 
             all_products.append(prod_detail)
         return all_products
