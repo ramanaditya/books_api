@@ -34,7 +34,7 @@ jobs:
           name: Run tests
           command: |
             . venv/bin/activate
-            python3 -m pytest
+            python3 -m pytest -vv
 workflows:
   version: 2
   build-deploy:
