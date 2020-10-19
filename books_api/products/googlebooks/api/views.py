@@ -8,11 +8,7 @@ from rest_framework.response import Response
 
 def getCustomizedList(output):
     ret = list()
-    items = list()
-    try:
-        items = output["items"]
-    except:
-        items = items
+    items = output["items"]
     if items:
         for item in items:
             data = dict()
