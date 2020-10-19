@@ -1,4 +1,5 @@
 import json
+import time
 
 import vcr
 from bs4 import BeautifulSoup
@@ -31,11 +32,10 @@ def save_json_data(file_name):
             identifiers = product_details.get_isbn(soup)
             for identifier in identifiers:
                 result[ind][identifier["type"]] = identifier["identifier"]
-    data["output"] = result
-    # dir_list = file_name.split("/")
-    # out_file_name = f'{"/".join(dir_list[:-1])}/data-{dir_list[-1]}'
-    with open(file_name, "w") as outfile:
-        json.dump(data, outfile, ensure_ascii=False, indent=4)
+    dir_list = file_name.split("/")
+    out_file_name = f'data/{"/".join(dir_list[1:])}'
+    with open(out_file_name, "w") as outfile:
+        json.dump(result, outfile, ensure_ascii=False, indent=4)
 
 
 class AmazonBooksAPITest(APITestCase):
@@ -49,19 +49,21 @@ class AmazonBooksAPITest(APITestCase):
         self.view = AmazonBooksViewSet.as_view({"get": "list"})
 
     def test_amazonbooks_api(self):
-        q = "The Alchemist"
+        query_string = "The Alchemist"
+        file_name = (
+            f"vcr_py/products/amazonbooks/{''.join(query_string.split(' '))}.json"
+        )
         with vcr.use_cassette(
-            "data/products/amazonbooks/test-amazonbooks.json",
+            f"{file_name}",
             serializer="json",
             record_mode="once",
-            filter_query_parameters=["q", "headers"],
+            filter_query_parameters=["q"],
             match_on=("body",),
             decode_compressed_response=True,
-            # before_record_response=reformat_response_body(q),
         ):
 
             request = self.factory.get(
-                f"/amazonbooks/?format=json&q={q}",
+                f"/amazonbooks/?format=json&q={query_string}",
                 HTTP_AUTHORIZATION=f"Token {self.token}",
                 format="json",
             )
@@ -69,4 +71,11 @@ class AmazonBooksAPITest(APITestCase):
             self.assertEqual(
                 response.status_code, 200, "Response error: {}".format(response)
             )
-        save_json_data("data/products/amazonbooks/test-amazonbooks.json")
+        max_check = 10
+        for i in range(max_check):
+            try:
+                with open(file_name, "rb") as _:
+                    break
+            except IOError:
+                time.sleep(3)
+        save_json_data(file_name)
