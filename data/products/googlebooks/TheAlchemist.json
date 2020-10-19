@@ -10,9 +10,7 @@
         "ISBN_13": "9780062315007"
     },
     {
-        "title": "Summary of The Alchemist by Paulo Coelho",
-        "ISBN_10": "1690407115",
-        "ISBN_13": "9781690407119"
+        "title": "Summary of The Alchemist by Paulo Coelho"
     },
     {
         "title": "The Alchemist",
@@ -20,20 +18,15 @@
         "ISBN_13": "9780007423200"
     },
     {
-        "title": "The Alchemist by Paulo Coelho Annotated"
+        "title": "The Alchemist"
     },
     {
-        "title": "The Alchemist"
+        "title": "The Alchemist by Paulo Coelho Annotated"
     },
     {
         "title": "The Alchemist",
         "ISBN_10": "0719016177",
         "ISBN_13": "9780719016172"
-    },
-    {
-        "title": "The Alchemist",
-        "ISBN_13": "9781770487307",
-        "ISBN_10": "1770487301"
     },
     {
         "title": "The Alchemist (Telugu)",
@@ -43,5 +36,10 @@
     {
         "title": "The Alchemist",
         "OTHER": "OXFORD:N11700506"
+    },
+    {
+        "title": "A Study Guide for Paulo Coelho's The Alchemist",
+        "ISBN_13": "9781410320681",
+        "ISBN_10": "1410320685"
     }
 ]
