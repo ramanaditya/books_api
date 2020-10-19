@@ -1,6 +1,4 @@
 import json
-import os
-import time
 
 import vcr
 from rest_framework.authtoken.models import Token
@@ -57,7 +55,6 @@ class GoogleBooksAPITest(APITestCase):
             filter_query_parameters=["q"],
             match_on=("body",),
             decode_compressed_response=True,
-            # before_record_response=save_googlebooks_output(file_name),
         ):
             request = self.factory.get(
                 f"/googlebooks/?format=json&q={self.query_string}",
@@ -65,19 +62,11 @@ class GoogleBooksAPITest(APITestCase):
                 format="json",
             )
             response = self.view(request)
+            response.render()
+            write_data_to_json(self.file_name, response.data)
             self.assertEqual(
                 response.status_code, 200, "Response error: {}".format(response.data),
             )
-
-        max_check = 10
-        for i in range(max_check):
-            try:
-                with open(self.file_name, "rb") as _:
-                    break
-            except IOError:
-                time.sleep(3)
-        result = get_googlebooks_output(self.file_name)
-        write_data_to_json(self.file_name, result)
 
     def test_vcr_and_viewsets_googlebooks(self):
         saved_data = list()

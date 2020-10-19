@@ -1,9 +1,7 @@
 import json
-import time
 
 import vcr
 from bs4 import BeautifulSoup
-from django.urls import reverse
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APIRequestFactory
 from rest_framework.test import APITestCase
@@ -84,18 +82,11 @@ class AmazonBooksAPITest(APITestCase):
                 format="json",
             )
             response = self.view(request)
+            response.render()
+            write_json_data(self.file_name, response.data)
             self.assertEqual(
                 response.status_code, 200, "Response error: {}".format(response)
             )
-        max_check = 10
-        for i in range(max_check):
-            try:
-                with open(self.file_name, "rb") as _:
-                    break
-            except IOError:
-                time.sleep(3)
-        result = get_json_data(self.file_name)
-        write_json_data(self.file_name, result)
 
     def test_vcr_and_viewsets_amazonbooks(self):
         saved_data = list()
