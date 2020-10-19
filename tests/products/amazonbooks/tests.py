@@ -105,4 +105,4 @@ class AmazonBooksAPITest(APITestCase):
         )
         response = self.view(request)
         response.render()
-        assert response.data == vcr_output
+        assert response.data[0] == vcr_output[0]

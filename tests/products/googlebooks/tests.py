@@ -90,4 +90,4 @@ class GoogleBooksAPITest(APITestCase):
         response = self.view(request)
         response.render()
         response_data = response.data
-        assert response_data[:5] == vcr_output[:5]
+        assert response_data[0] == vcr_output[0]
