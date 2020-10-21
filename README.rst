@@ -54,7 +54,6 @@ Set this variable True, to record the json output
 if True, it records the output in the json file inside data/products
 Else, it tests the values of both VCR and output json
 
-
 Running tests with py.test
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
