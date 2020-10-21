@@ -44,12 +44,25 @@ To run the tests, check your test coverage, and generate an HTML coverage report
     $ coverage html
     $ open htmlcov/index.html
 
+Before Running Test
+^^^^^^^^^^^^^^^^^^^^
+Set this variable True, to record the json output
+::
+    # Default is False,
+    $ export VCR_WRITE_MODE=True    # For the first time
+
+if True, it records the output in the json file inside data/products
+Else, it tests the values of both VCR and output json
+
+
 Running tests with py.test
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ::
 
   $ python3 -m pytest
+  $ python3 -m pytest -vv # For detailed tests
+
 
 Live reloading and Sass CSS compilation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
