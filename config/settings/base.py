@@ -302,6 +302,9 @@ CORS_URLS_REGEX = r"^/api/.*$"
 
 GOOGLE_BOOKS_API = "https://www.googleapis.com/books/v1/volumes"
 AMAZON_BOOKS_API = "https://www.amazon.com"
+
+VCR_WRITE_MODE = env.bool("VCR_WRITE_MODE", False)
+
 HEADERS_MAC = {
     "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.121 Safari/537.36",
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
@@ -310,6 +313,7 @@ HEADERS_MAC = {
     "Accept-Language": "en-US,en;q=0.8",
     "Connection": "keep-alive",
 }
+
 PROXIES_MAC = {
     "http": "http://10.10.1.10:3128",
     "https": "http://10.10.1.10:1080",
